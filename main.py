@@ -82,9 +82,12 @@ def main():
     while time() - t0 < timeout:
         result = build.result
         if result == 'SUCCESS':
-            logging.info(f'Build successful 🎉')
+            logging.info(f'Build successful')
             return
-        elif result in ('FAILURE', 'ABORTED', 'UNSTABLE'):
+        elif result == 'UNSTABLE':
+            logging.info(f'Build unstable')
+            return
+        elif result in ('FAILURE', 'ABORTED'):
             raise Exception(f'Build status returned "{result}". Build has failed ☹️.')
         logging.info(f'Build not finished yet. Waiting {interval} seconds. {build_url}')
         sleep(interval)
