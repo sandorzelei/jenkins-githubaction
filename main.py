@@ -22,6 +22,7 @@ def main():
     timeout = int(os.environ.get("INPUT_TIMEOUT"))
     start_timeout = int(os.environ.get("INPUT_START_TIMEOUT"))
     interval = int(os.environ.get("INPUT_INTERVAL"))
+    access_token = os.environ.get("INPUT_ACCESS_TOKEN")
 
 
     if username and api_token:
@@ -75,11 +76,14 @@ def main():
     print(f"::set-output name=build_url::{build_url}")
     print(f"::notice title=build_url::{build_url}")
 
-    if not wait:
-        logging.info("Not waiting for build to finish.")
+    result=wait_for_build(build,timeout,interval)
+
+    if access_token is None:
+        logging.info("No comment.")
+        if result in ('FAILURE', 'ABORTED'):
+            raise Exception(result)
         return
 
-    result=wait_for_build(build,timeout,interval)
     body = f'### [Build]({build_url}) status returned **{result}**.'
     try:
         body+='\nBuild ran _{build_time} ms_'.format(build_time=build.api_json()["duration"])
@@ -97,6 +101,9 @@ def main():
         s=test_reports_json["skipCount"]
     )
     issue_comment(body)
+
+    if result in ('FAILURE', 'ABORTED'):
+        raise Exception(result)
 
 
 def wait_for_build(build,timeout,interval):
