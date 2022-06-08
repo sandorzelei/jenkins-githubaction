@@ -1,5 +1,6 @@
 import os
 from api4jenkins import Jenkins
+from github import Github
 import logging
 import json
 from time import time, sleep
@@ -22,6 +23,8 @@ def main():
     start_timeout = int(os.environ.get("INPUT_START_TIMEOUT"))
     interval = int(os.environ.get("INPUT_INTERVAL"))
 
+    g = Github(os.environ.get("INPUT_ACCESS_TOKEN"))
+    
     if username and api_token:
         auth = (username, api_token)
     else:
@@ -93,7 +96,12 @@ def main():
         sleep(interval)
     else:
         raise Exception(f"Build has not finished and timed out. Waited for {timeout} seconds.")
-
+    
+    repo = g.get_repo("intland/pr-integration-test")
+    pulls = repo.get_pulls(state='open', sort='created', base='master')
+    
+    for pr in pulls:
+       print(pr)
 
 if __name__ == "__main__":
     main()
