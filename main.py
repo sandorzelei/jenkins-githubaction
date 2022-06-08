@@ -24,7 +24,7 @@ def main():
     interval = int(os.environ.get("INPUT_INTERVAL"))
     access_token = os.environ.get("INPUT_ACCESS_TOKEN")
     print("printing access token")
-    print(os.environ.get("INPUT_ACCESS_TOKEN"))
+    print(len(os.environ.get("INPUT_ACCESS_TOKEN")))
 
     if username and api_token:
         auth = (username, api_token)
