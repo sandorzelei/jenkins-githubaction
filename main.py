@@ -72,6 +72,8 @@ def main():
         raise Exception(f"Could not obtain build and timed out. Waited for {start_timeout} seconds.")
 
     build_url = build.url
+    if access_token is not None:
+        issue_comment(f'Build started [here]({build_url})')
     logging.info(f"Build URL: {build_url}")
     print(f"::set-output name=build_url::{build_url}")
     print(f"::notice title=build_url::{build_url}")
