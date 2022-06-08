@@ -27,7 +27,7 @@ inputs:
   timeout:
     description: "Timeout in seconds for build to complete"
     required: false
-    default: "600"
+    default: "18000"
   start_timeout:
     description: "Timeout in seconds for build to start"
     required: false
