@@ -23,6 +23,7 @@ def main():
     start_timeout = int(os.environ.get("INPUT_START_TIMEOUT"))
     interval = int(os.environ.get("INPUT_INTERVAL"))
     access_token = os.environ.get("INPUT_ACCESS_TOKEN")
+    job_name = os.environ.get("INPUT_JOB_NAME")
 
     if username and api_token:
         auth = (username, api_token)
@@ -72,7 +73,8 @@ def main():
 
     build_url = build.url
     if access_token:
-        issue_comment(f'Build started [here]({build_url})')
+        issue_comment(f'{job_name} - Build started [here]({build_url})')
+        
     logging.info(f"Build URL: {build_url}")
     print(f"::set-output name=build_url::{build_url}")
     print(f"::notice title=build_url::{build_url}")
@@ -85,9 +87,9 @@ def main():
             raise Exception(result)
         return
 
-    body = f'### [Build]({build_url}) status returned **{result}**.'
+    body = f'### [{job_name} - Build]({build_url}) status returned **{result}**.'
     try:
-        body+='\nBuild ran _{build_time} ms_'.format(build_time=build.api_json()["duration"])
+        body+='\n{job_name} - Build ran _{build_time} ms_'.format(job_name=job_name, build_time=build.api_json()["duration"])
     except e:
         logging.info(f"Build duration unknown:\n{e}")
 
