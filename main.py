@@ -86,9 +86,11 @@ def main():
         result = build.result
         if result == 'SUCCESS':
             logging.info(f'Build successful')
+            pr(g)
             return
         elif result == 'UNSTABLE':
             logging.info(f'Build unstable')
+            pr(g)
             return
         elif result in ('FAILURE', 'ABORTED'):
             raise Exception(f'Build status returned "{result}". Build has failed ☹️.')
@@ -96,7 +98,9 @@ def main():
         sleep(interval)
     else:
         raise Exception(f"Build has not finished and timed out. Waited for {timeout} seconds.")
-    
+
+        
+def pr(g):
     repo = g.get_repo("intland/pr-integration-test")
     pulls = repo.get_pulls(state='open', sort='created', base='master')
     
