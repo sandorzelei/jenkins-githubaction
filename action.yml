@@ -16,7 +16,7 @@ inputs:
     required: true
   access_token:
     description: "GitHub token"
-    required: true
+    required: false
   parameters:
     description: 'Build parameters in JSON format e.g. `{"field1":"value1"}`'
     required: false
