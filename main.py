@@ -25,12 +25,6 @@ def main():
     interval = int(os.environ.get("INPUT_INTERVAL"))
     access_token = os.environ.get("INPUT_ACCESS_TOKEN")
     display_job_name = os.environ.get("INPUT_DISPLAY_JOB_NAME")
-
-    try:
-         joke = requests.get('https://api.chucknorris.io/jokes/random', timeout=5).json()["value"]
-         logging.info(joke)
-    except e:
-        logging.info(f"API cannot be called:\n{e}")
         
     if username and api_token:
         auth = (username, api_token)
@@ -110,7 +104,13 @@ def main():
         f=test_reports_json["failCount"],
         s=test_reports_json["skipCount"]
     )
-            
+     
+    try:
+         joke = requests.get('https://api.chucknorris.io/jokes/random', timeout=1).json()["value"]
+         body+="\n\n```{joke}```" 
+    except e:
+        logging.info(f"API cannot be called:\n{e}")
+        
     issue_comment(body)
 
     if result in ('FAILURE', 'ABORTED'):
