@@ -1,5 +1,6 @@
 import os
 from api4jenkins import Jenkins
+from github import Github
 import logging
 import json
 from time import time, sleep
@@ -21,6 +22,7 @@ def main():
     timeout = int(os.environ.get("INPUT_TIMEOUT"))
     start_timeout = int(os.environ.get("INPUT_START_TIMEOUT"))
     interval = int(os.environ.get("INPUT_INTERVAL"))
+
 
     if username and api_token:
         auth = (username, api_token)
@@ -77,22 +79,58 @@ def main():
         logging.info("Not waiting for build to finish.")
         return
 
+    result=wait_for_build(build,timeout,interval)
+    body = f'### [Build]({build_url}) status returned **{result}**.'
+    try:
+        body+='\nBuild ran _{build_time} ms_'.format(build_time=build.api_json()["duration"])
+    except e:
+        logging.info(f"Build duration unknown:\n{e}")
+
+    test_reports=build.get_test_report()
+    if build.get_test_report() is None:
+        body+="\n_No test were ran_"
+    else:
+        test_reports_json=test_reports.api_json()
+        body+="\n\n## Test Results:\n**Passed: {p}**\n**Failed: {f}**\n**Skipped: {s}**".format(
+        p=test_reports_json["passCount"],
+        f=test_reports_json["failCount"],
+        s=test_reports_json["skipCount"]
+    )
+    issue_comment(body)
+
+
+def wait_for_build(build,timeout,interval):
+    build_url=build.url
     t0 = time()
     sleep(interval)
     while time() - t0 < timeout:
         result = build.result
         if result == 'SUCCESS':
             logging.info(f'Build successful')
-            return
-        elif result == 'UNSTABLE':
+            return result
+        if result == 'UNSTABLE':
             logging.info(f'Build unstable')
-            return
-        elif result in ('FAILURE', 'ABORTED'):
-            raise Exception(f'Build status returned "{result}". Build has failed ☹️.')
+            return result
+        if result in ('FAILURE', 'ABORTED'):
+            logging.info(f'Build status returned "{result}". Build has failed ☹️.')
+            return result
         logging.info(f'Build not finished yet. Waiting {interval} seconds. {build_url}')
         sleep(interval)
-    else:
-        raise Exception(f"Build has not finished and timed out. Waited for {timeout} seconds.")
+    logging.info(f"Build has not finished and timed out. Waited for {timeout} seconds.")
+    return "TIMEOUT"
+
+
+def issue_comment(body):
+    g = Github(os.environ.get("INPUT_ACCESS_TOKEN"))
+
+    github_event_file = open(os.environ.get("GITHUB_EVENT_PATH"), "r")
+    github_event = json.loads(github_event_file.read())
+    github_event_file.close
+
+    pr_repo_name = github_event["pull_request"]["base"]["repo"]["full_name"]
+    pr_number = github_event["number"]
+
+    g.get_repo(pr_repo_name).get_pull(pr_number).create_issue_comment(body)
 
 
 if __name__ == "__main__":
