@@ -23,7 +23,7 @@ def main():
     start_timeout = int(os.environ.get("INPUT_START_TIMEOUT"))
     interval = int(os.environ.get("INPUT_INTERVAL"))
     access_token = os.environ.get("INPUT_ACCESS_TOKEN")
-
+    print(os.environ.get("INPUT_ACCESS_TOKEN"))
 
     if username and api_token:
         auth = (username, api_token)
