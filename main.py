@@ -23,6 +23,7 @@ def main():
     start_timeout = int(os.environ.get("INPUT_START_TIMEOUT"))
     interval = int(os.environ.get("INPUT_INTERVAL"))
     access_token = os.environ.get("INPUT_ACCESS_TOKEN")
+    print("printing access token")
     print(os.environ.get("INPUT_ACCESS_TOKEN"))
 
     if username and api_token:
@@ -72,7 +73,7 @@ def main():
         raise Exception(f"Could not obtain build and timed out. Waited for {start_timeout} seconds.")
 
     build_url = build.url
-    if access_token is not None:
+    if access_token is not None or access_token:
         issue_comment(f'Build started [here]({build_url})')
     logging.info(f"Build URL: {build_url}")
     print(f"::set-output name=build_url::{build_url}")
@@ -80,7 +81,7 @@ def main():
 
     result=wait_for_build(build,timeout,interval)
 
-    if access_token is None:
+    if access_token is None or access_token:
         logging.info("No comment.")
         if result in ('FAILURE', 'ABORTED'):
             raise Exception(result)
