@@ -3,6 +3,7 @@ from api4jenkins import Jenkins
 from github import Github
 import logging
 import json
+import requests
 from time import time, sleep
 
 log_level = os.environ.get('INPUT_LOG_LEVEL', 'INFO')
@@ -25,6 +26,12 @@ def main():
     access_token = os.environ.get("INPUT_ACCESS_TOKEN")
     display_job_name = os.environ.get("INPUT_DISPLAY_JOB_NAME")
 
+    try:
+         joke = requests.get('https://api.chucknorris.io/jokes/random', timeout=5).json()["value"]
+         logging.info(joke)
+    except e:
+        logging.info(f"API cannot be called:\n{e}")
+        
     if username and api_token:
         auth = (username, api_token)
     else:
@@ -103,6 +110,7 @@ def main():
         f=test_reports_json["failCount"],
         s=test_reports_json["skipCount"]
     )
+            
     issue_comment(body)
 
     if result in ('FAILURE', 'ABORTED'):
