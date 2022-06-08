@@ -10,10 +10,13 @@ inputs:
     required: true
   username:
     description: "Jenkins username"
-    required: false
+    required: true
   api_token:
     description: "Jenkins API token"
-    required: false
+    required: true
+  access_token:
+    description: "GitHub token"
+    required: true
   parameters:
     description: 'Build parameters in JSON format e.g. `{"field1":"value1"}`'
     required: false
