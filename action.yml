@@ -17,8 +17,8 @@ inputs:
   access_token:
     description: "GitHub token"
     required: false
-  job_name:
-    description: "GitHub token"
+  display_job_name:
+    description: "Job name used for link"
     required: false
     default: 'CI'
   parameters:
