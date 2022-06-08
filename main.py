@@ -107,7 +107,7 @@ def main():
      
     try:
          joke = requests.get('https://api.chucknorris.io/jokes/random', timeout=1).json()["value"]
-         body+=f"\n\n```{joke}```" 
+         body+=f"\n\n>{joke}" 
     except e:
         logging.info(f"API cannot be called:\n{e}")
         
