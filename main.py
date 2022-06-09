@@ -37,9 +37,8 @@ def getCommitMessages(githubApi):
     
     print(ids)
         
-def getIds(text) {
+def getIds(text):
     return re.findall(r'#([\d]+)', text)
-}
 
 if __name__ == "__main__":
     main()
