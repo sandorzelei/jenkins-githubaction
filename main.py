@@ -26,14 +26,19 @@ def getCommitMessages(githubApi):
     pr_repo_name = github_event["pull_request"]["base"]["repo"]["full_name"]
     pr_number = github_event["number"]
 
-    commits = githubApi.get_repo(pr_repo_name).get_pull(pr_number).get_commits()
+    pr = githubApi.get_repo(pr_repo_name).get_pull(pr_number)
+    commits = pr.get_commits()
     
-    cnt = 0
-    for c in commits:
-        cnt += 1
-        ids = re.findall(r'#([\d]+)', c.commit.message)
-        print(str(cnt) + " :" + c.commit.message)
+    print getIds(pr.title)
+    
+    for c in pr.get_commits():
+        ids = getIds(c.commit.message)
         print(ids)
+
+        
+def getIds(text) {
+    return re.findall(r'#([\d]+)', text)
+}
 
 if __name__ == "__main__":
     main()
