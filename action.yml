@@ -16,7 +16,11 @@ inputs:
     required: true
   access_token:
     description: "GitHub token"
-    required: true
+    required: false
+  display_job_name:
+    description: "Job name used for link"
+    required: false
+    default: 'CI'
   parameters:
     description: 'Build parameters in JSON format e.g. `{"field1":"value1"}`'
     required: false
@@ -30,7 +34,7 @@ inputs:
   timeout:
     description: "Timeout in seconds for build to complete"
     required: false
-    default: "600"
+    default: "18000"
   start_timeout:
     description: "Timeout in seconds for build to start"
     required: false
