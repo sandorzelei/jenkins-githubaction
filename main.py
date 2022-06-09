@@ -30,7 +30,7 @@ def getCommitMessages(githubApi):
     commits = pr.get_commits()
     
     ids = []
-    ids.extend(getIds(pr.title)))
+    ids.extend(getIds(pr.title))
     
     for c in pr.get_commits():
         ids.extend(getIds(c.commit.message))
