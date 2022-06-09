@@ -29,6 +29,8 @@ def main():
     job_query_timeout = 60
     job_query_interval = 5
 
+    g = Github(os.environ.get("INPUT_ACCESS_TOKEN"))
+    
     if username and api_token:
         auth = (username, api_token)
     else:
@@ -164,6 +166,13 @@ def issue_comment(body):
 
     g.get_repo(pr_repo_name).get_pull(pr_number).create_issue_comment(body)
 
+        
+def pr(g):
+    repo = g.get_repo("intland/pr-integration-test")
+    pulls = repo.get_pulls(state='open', sort='created', base='master')
+    
+    for pr in pulls:
+       print(pr)
 
 if __name__ == "__main__":
     main()
