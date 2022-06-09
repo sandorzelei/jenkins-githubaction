@@ -29,12 +29,13 @@ def getCommitMessages(githubApi):
     pr = githubApi.get_repo(pr_repo_name).get_pull(pr_number)
     commits = pr.get_commits()
     
-    print getIds(pr.title)
+    ids = []
+    ids.extend(getIds(pr.title)))
     
     for c in pr.get_commits():
-        ids = getIds(c.commit.message)
-        print(ids)
-
+        ids.extend(getIds(c.commit.message))
+    
+    print(ids)
         
 def getIds(text) {
     return re.findall(r'#([\d]+)', text)
