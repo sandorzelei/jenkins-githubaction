@@ -2,6 +2,7 @@ import os
 from api4jenkins import Jenkins
 from github import Github
 import logging
+import re
 import json
 import requests
 from time import time, sleep
@@ -10,26 +11,8 @@ log_level = os.environ.get('INPUT_LOG_LEVEL', 'INFO')
 logging.basicConfig(format='JENKINS_ACTION: %(message)s', level=log_level)
 
 def main():
-    # Required
-    url = os.environ["INPUT_URL"]
-    job_name = os.environ["INPUT_JOB_NAME"]
-
-    # Optional
-    username = os.environ.get("INPUT_USERNAME")
-    api_token = os.environ.get("INPUT_API_TOKEN")
-    parameters = os.environ.get("INPUT_PARAMETERS")
-    cookies = os.environ.get("INPUT_COOKIES")
-    timeout = int(os.environ.get("INPUT_TIMEOUT"))
-    start_timeout = int(os.environ.get("INPUT_START_TIMEOUT"))
-    interval = int(os.environ.get("INPUT_INTERVAL"))
     access_token = os.environ.get("INPUT_ACCESS_TOKEN")
-    display_job_name = os.environ.get("INPUT_DISPLAY_JOB_NAME")
-
-    # Predefined
-    job_query_timeout = 60
-    job_query_interval = 5
-
-    g = Github(os.environ.get("INPUT_ACCESS_TOKEN"))
+    g = Github(access_token)
     
     getCommitMessages(g)
 
@@ -48,7 +31,9 @@ def getCommitMessages(githubApi):
     cnt = 0
     for c in commits:
         cnt += 1
+        ids = re.findall(r'#([\d]+)', c.commit.message)
         print(str(cnt) + " :" + c.commit.message)
+        print(ids)
 
 if __name__ == "__main__":
     main()
