@@ -43,7 +43,7 @@ def getCommitMessages(githubApi):
     pr_repo_name = github_event["pull_request"]["base"]["repo"]["full_name"]
     pr_number = github_event["number"]
 
-    commits = githubApi.get_repo(pr_repo_name).get_pull(pr_number).get_commits(body)
+    commits = githubApi.get_repo(pr_repo_name).get_pull(pr_number).get_commits()
     
     cnt = 0
     for c in commits:
