@@ -15,11 +15,8 @@ def main():
     codebeamer_user = os.environ.get("INPUT_CODEBEAMER_USER")
     codebeamer_password = os.environ.get("INPUT_CODEBEAMER_PASSWORD")
     
-    if not (username and api_token):
-        auth = (username, api_token)
-    else:
-        auth = None
-        logging.info('Username or token not provided. Connecting without authentication.')
+    if not (codebeamer_user and codebeamer_password):
+        raise Exception("codebeamer_user and codebeamer_password parameters must be set")
         
     g = Github(access_token)
     
