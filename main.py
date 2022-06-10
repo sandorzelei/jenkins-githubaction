@@ -15,7 +15,7 @@ def main():
     codebeamer_user = os.environ.get("INPUT_CODEBEAMER_USER")
     codebeamer_password = os.environ.get("INPUT_CODEBEAMER_PASSWORD")
     
-    if !(username and api_token):
+    if not (username and api_token):
         auth = (username, api_token)
     else:
         auth = None
