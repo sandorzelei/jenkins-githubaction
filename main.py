@@ -46,7 +46,7 @@ def getCommitMessages(githubApi, cbAuth):
         response = requests.get(url=itemGetUrl, auth=cbAuth)
         if response.status_code == 200:
             for t in response.json()["teams"]:
-                println t["name"]
+                print(t["name"])
         
 def getIds(text):
     return re.findall(r'#([\d]+)', text)
