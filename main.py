@@ -49,7 +49,8 @@ def getCommitMessages(githubApi, cbAuth):
             for t in response.json()["teams"]:
                 teams.add(t["name"])
     
-    print(teams)
+    teamSet = set(teams)
+    print(teamSet)
         
 def getIds(text):
     return re.findall(r'#([\d]+)', text)
