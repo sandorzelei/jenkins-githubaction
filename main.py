@@ -41,12 +41,15 @@ def getCommitMessages(githubApi, cbAuth):
     for c in pr.get_commits():
         ids.extend(getIds(c.commit.message))
     
+    teams = []
     for i in set(ids):
         itemGetUrl = f"https://codebeamer.com/cb/api/v3/items/{i}"
         response = requests.get(url=itemGetUrl, auth=cbAuth)
         if response.status_code == 200:
             for t in response.json()["teams"]:
-                print(t["name"])
+                teams.add(t["name"])
+    
+    print(teams)
         
 def getIds(text):
     return re.findall(r'#([\d]+)', text)
