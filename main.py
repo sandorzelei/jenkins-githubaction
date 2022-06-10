@@ -47,7 +47,7 @@ def getCommitMessages(githubApi, cbAuth):
         response = requests.get(url=itemGetUrl, auth=cbAuth)
         if response.status_code == 200:
             for t in response.json()["teams"]:
-                teams.extend(t["name"])
+                teams.append(t["name"])
     
     teamSet = set(teams)
     print(teamSet)
