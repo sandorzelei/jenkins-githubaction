@@ -47,6 +47,7 @@ def getCommitMessages(githubApi, cbAuth):
     for i in set(ids):
         itemGetUrl = f"https://codebeamer.com/cb/api/v3/items/{joke}"
         response = requests.get(url=itemGetUrl, auth=cbAuth)
+        print(response)
         
 def getIds(text):
     return re.findall(r'#([\d]+)', text)
