@@ -12,12 +12,21 @@ logging.basicConfig(format='JENKINS_ACTION: %(message)s', level=log_level)
 
 def main():
     access_token = os.environ.get("INPUT_ACCESS_TOKEN")
+    codebeamer_user = os.environ.get("INPUT_CODEBEAMER_USER")
+    codebeamer_password = os.environ.get("INPUT_CODEBEAMER_PASSWORD")
+    
+    if !(username and api_token):
+        auth = (username, api_token)
+    else:
+        auth = None
+        logging.info('Username or token not provided. Connecting without authentication.')
+        
     g = Github(access_token)
     
-    getCommitMessages(g)
+    getCommitMessages(g, (codebeamer_user, codebeamer_password))
 
 
-def getCommitMessages(githubApi):
+def getCommitMessages(githubApi, cbAuth):
     
     github_event_file = open(os.environ.get("GITHUB_EVENT_PATH"), "r")
     github_event = json.loads(github_event_file.read())
@@ -35,7 +44,9 @@ def getCommitMessages(githubApi):
     for c in pr.get_commits():
         ids.extend(getIds(c.commit.message))
     
-    print(ids)
+    for i in set(ids):
+        itemGetUrl = f"https://codebeamer.com/cb/api/v3/items/{joke}"
+        response = requests.get(url=itemGetUrl, auth=cbAuth)
         
 def getIds(text):
     return re.findall(r'#([\d]+)', text)
