@@ -42,7 +42,7 @@ def getCommitMessages(githubApi, cbAuth):
         ids.extend(getIds(c.commit.message))
     
     for i in set(ids):
-        itemGetUrl = f"https://codebeamer.com/cb/api/v3/items/{joke}"
+        itemGetUrl = f"https://codebeamer.com/cb/api/v3/items/{i}"
         response = requests.get(url=itemGetUrl, auth=cbAuth)
         print(response)
         
